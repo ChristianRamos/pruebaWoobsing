@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="">
+      <h1>Creación de usuarios</h1>
+      <div class="">
+        <input type="text" id="nombre" name="" >
+        <input type="text" id="apellido" name="" >
+        <input type="text" id="direccion" name="">
+        <input type="text" id="telefono" name="" >
+        <input type="text" id="correo" name="">
+      </div>
+      <div class="">
+        <button type="button" name="button" onclick="enviarDatos()"> ENVIAR </button>
+      </div>
+
+    </div>
+
+    <div class="">
+        <h1>Consulta de usuarios</h1>
+        <div class="">
+          <button type="button" name="button" onclick="consultarUsuario()"> Consultar usuarios </button>
+        </div>
+        <div class="" >
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>apellido</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>E-mail</th>
+              </tr>
+            </thead>
+            <tbody  id="listaUsuarios">
+
+                <td>Body content 1</td>
+                <td>Body content 2</td>
+
+            </tbody>
+          </table>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.7.2.js"></script>
+    <script>
+      function enviarDatos(){
+        var datosEnvio = {
+          nombre:     document.getElementById('nombre').value,
+          apellido:   document.getElementById('apellido').value,
+          direccion:  document.getElementById('direccion').value,
+          telefono:   document.getElementById('telefono').value,
+          mail:     document.getElementById('correo').value
+        };
+
+       $.ajax({
+            type:"POST", // la variable type guarda el tipo de la peticion GET,POST,..
+            url:"http://localhost/laravel/public/api/usuario", //url guarda la ruta hacia donde se hace la peticion
+            data:datosEnvio, // data recive un objeto con la informacion que se enviara al servidor
+            dataType: "json",
+            success:function(datos){ //success es una funcion que se utiliza si el servidor retorna informacion
+                 alert( "El usuario se creo satisfactoriamente");
+             },
+            //dataType: dataType // El tipo de datos esperados del servidor. Valor predeterminado: Intelligent Guess (xml, json, script, text, html).
+        });
+      }
+
+      function consultarUsuario(){
+        $.ajax({
+               type:"GET", // la variable type guarda el tipo de la peticion GET,POST,..
+               url:"http://localhost/laravel/public/api/usuario",  // data recive un objeto con la informacion que se enviara al servidor
+               success:function(datos){ //success es una funcion que se utiliza si el servidor retorna informacion
+                 var res = JSON.parse( datos );
+                 var fila = "";
+                for( i = 0; i < res.length; i++ ){
+                  console.log(res[i]);
+                  fila = fila + "<tr>"
+                   fila = fila + "<td>"+res[i].id+"</td>";
+                   fila = fila + "<td>"+res[i].nombre+"</td>";
+                   fila = fila + "<td>"+res[i].apellido+"</td>";
+                   fila = fila + "<td>"+res[i].direccion+"</td>";
+                   fila = fila + "<td>"+res[i].telefono+"</td>";
+                   fila = fila + "<td>"+res[i].correo+"</td>";
+                   fila = fila + "</tr>";
+                 }
+                    console.log( fila );
+                    document.getElementById('listaUsuarios').innerHTML = fila;
+                },
+               //dataType: dataType // El tipo de datos esperados del servidor. Valor predeterminado: Intelligent Guess (xml, json, script, text, html).
+           });
+      }
+
+
+    </script>
+  </body>
+
+</html>
